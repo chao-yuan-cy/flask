@@ -25,16 +25,23 @@ class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(60))
     year = db.Column(db.String(4))
-@app.route('/')
 
-@app.route('/home')
+
+#模板上下文处理函数
+@app.context_processor
+def common_user():
+    user = User.query.first()
+    return dict(user=user)
 #views
+@app.route('/')
+@app.route('/home')
+
 def index():
  
-    user = User.query.first()
+    # user = User.query.first()
     movies = Movie.query.all()
 
-    return render_template('index.html',user=user,movies=movies)
+    return render_template('index.html',movies=movies)
 #动态url
 @app.route('/index/<name>')
 def home(name):
@@ -70,3 +77,16 @@ def forge():
         db.session.add(movies)
     db.session.commit()
     click.echo('插入数据完成')
+
+
+# 错误处理函数
+@app.errorhandler(404)
+def page_not_found(e):
+    # user = User.query.first()
+    #返回模板和源码
+    return render_template('404.html'),404
+@app.errorhandler(500)
+def page_error(e):
+    # user = User.query.first()
+    return render_template('500.html'),500
+
