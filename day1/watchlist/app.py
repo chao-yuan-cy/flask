@@ -59,7 +59,7 @@ def index():
 
     return render_template('index.html',movies=movies)
 @app.route('/movie/edit/<int:movie_id>',methods=['GET','POST'])
-
+#更新电影信息
 def edit(movie_id):
     movie = Movie.query.get_or_404(movie_id)
     if request.method == 'POST':
@@ -74,17 +74,17 @@ def edit(movie_id):
         flash('更新完成')
         return redirect(url_for('index'))
     return render_template('edit.html',movie=movie)
-# 删除
-@app.route('/movie/delete/<int:movie_id>',methods=['GET','POST'])
+# 删除电影信息
+@app.route('/movie/delete/<int:movie_id>',methods=['POST'])
 
 def delete(movie_id):
     movie = Movie.query.get_or_404(movie_id)
-    if request.method == 'POST':
-        db.session.delete(movie)
-        db.session.commit()
-        flash('删除完成')
-        return redirect(url_for('index'))
-    return render_template('delete.html',movie=movie)
+    
+    db.session.delete(movie)
+    db.session.commit()
+    flash('删除完成')
+    return redirect(url_for('index'))
+    # return render_template('delete.html',movie=movie)
 #动态url
 @app.route('/index/<name>')
 def home(name):
