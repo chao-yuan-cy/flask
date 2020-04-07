@@ -4,7 +4,7 @@ import sys
 from flask import Flask,url_for,render_template,flash,redirect,request
 import click
 from flask_sqlalchemy import SQLAlchemy#导入扩展类
-from flask_login import LoginManager,UserMixin,login_user,logout_user,login_required
+from flask_login import LoginManager,UserMixin,login_user,logout_user,login_required,current_user
 from werkzeug.security import generate_password_hash,check_password_hash
 WIN = sys.platform.startswith('win')
 
@@ -25,7 +25,7 @@ login_manager = LoginManager(app) # 实例化登录拓展类
 def load_user(user_id):
     user = User.query.get(int(user_id))
     return user
-
+login_manager.login_view = 'login'
 # models
 class User(db.Model,UserMixin):
     id = db.Column(db.Integer,primary_key=True)
@@ -54,6 +54,8 @@ def common_user():
 
 def index():
     if request.method == 'POST':
+        if not current_user.is_authenticated():
+            return redirect(url_for('index'))
         # request在请求触发的时候才会包含数据
         title = request.form.get('title')
         year = request.form.get('year')
@@ -75,6 +77,7 @@ def index():
     return render_template('index.html',movies=movies)
 @app.route('/movie/edit/<int:movie_id>',methods=['GET','POST'])
 #更新电影信息
+@login_required
 def edit(movie_id):
     movie = Movie.query.get_or_404(movie_id)
     if request.method == 'POST':
@@ -98,7 +101,19 @@ def delete(movie_id):
     db.session.commit()
     flash('删除成功')
     return redirect(url_for('index'))
-
+@app.route('/settings',methods=['GET','POST'])
+@login_required
+def settings():
+    if request.method == 'POST':
+        name = request.form['name']
+        if not name or len(name)>20:
+            flash('输入错误')
+            return redirect(url_for('settings'))
+        current_user.name = name
+        db.session.commit()
+        flash('名称已经更新')
+        return redirect(url_for('index'))
+    return render_template('settings.html')
 
 # 登录
 @app.route('/login',methods=['GET','POST'])
@@ -123,7 +138,7 @@ def login():
 
 # 登出
 @app.route('/logout')
-# @login_required
+@login_required
 def logout():
     logout_user()
     flash('拜拜')
