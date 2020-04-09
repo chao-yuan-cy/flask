@@ -50,9 +50,15 @@
                 // second不是0
                 if(this.second !== 0){
                     this.second--;
+                    if(this.second<10){
+                        var a = this.second
+                        if(a>0){
+                            this.second = '0' +a
+                        }
+                    }
                     return
                 }
-
+           
                 //second是0，minute不是0
                 if(this.minute !== 0){
                     this.minute--;
