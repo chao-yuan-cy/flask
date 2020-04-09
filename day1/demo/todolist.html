@@ -48,11 +48,11 @@
             },
             _tick:function(){
                 // second不是0
-                if(this.second !== 0){
+                if(parseInt(this.second) !== 0){
                     this.second--;
                     if(this.second<10){
                         var a = this.second
-                        if(a>0){
+                        if(a>=0){
                             this.second = '0' +a
                         }
                     }
