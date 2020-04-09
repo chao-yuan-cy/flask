@@ -55,7 +55,7 @@
                 </div>
             </li>
             <li>
-                <div class="checkbox">
+                <div class="removed">
                     <label for="">
                         <input class="js-item" type="checkbox">电脑
                     </label>
@@ -72,7 +72,7 @@
         function onAdd(){
             var $ul,$li,$label,$div,value;
             value = $('.js-new-item').val()
-            if(value === ''){
+            if(value==''){
                 return;
             }
             $ul = $('ul');
