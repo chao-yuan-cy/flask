@@ -1,12 +1,13 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-// 引入 模块
+// 引入 路由模块
 import VueRouter from 'vue-router'
 
 import Base from './Base.vue'
 // 引入 单文件组件
 import IndexPage from './components/index.vue'
+import mock from './mock/mock'
 
 Vue.config.productionTip = false
 // 调用
